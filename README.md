@@ -11,8 +11,10 @@ Command line tool for translating English words into Chinese.
 
 ### run
 ```js
-    $ godict book
+    $ godict -V
+    // 1.3.0
 
+    $ godict book
     // #  1
     // Cn:  (纸版或电子版的)书
     // En:  a written text that can be published in printed or electronic form
@@ -35,5 +37,6 @@ Command line tool for translating English words into Chinese.
 
     // exit the cli 
     godict gg
+
 
 ```

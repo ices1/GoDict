@@ -1,83 +1,37 @@
 #!/usr/bin/env node
-const axios = require('axios')
-const wordBaseUrl = 'http://104.194.71.73:5001/word/'
-const AutoBaseUrl = 'http://104.194.71.73:5001/autocomplete/'
+var program = require('commander')
 
-const readline = require('readline')
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  // prompt: 'godict '
-  prompt: 'GoDict >>> '
-})
+program
+  .version('1.3.0')
+  // .option('-V, --version', '1.3.0')
+  .option('-C, --chdir <path>', 'change the working directory')
+  .option('-c, --config <path>', 'set config path. defaults to ./deploy.conf')
+  .option('-T, --no-tests', 'ignore test hook')
 
-// read the second argv...
-;(async () => {
-  if (process.argv[2]) {
-    let a = await getWord(process.argv[2].trim())
-    console.log('\n')
-    rl.prompt()
-  } 
-  })()
+program
+  .command('setup [env]')
+  .description('run setup commands for all envs')
+  .option("-s, --setup_mode [mode]", "Which setup mode to use")
+  .action(function(env, options){
+    var mode = options.setup_mode || "normal"
+    env = env || 'all'
+    console.log('setup for %s env(s) with %s mode', env, mode)
+  })
 
-
-// get data by  getAutoWord
-async function  getAutoWord (word) {
-  await axios.get(AutoBaseUrl + word)
-    .then((res) => {
-      let ary = res.data.results
-      if (ary.length) {
-        console.log(`\n<<< msg: '${word}' not found, the following are relative words  ^_^`)
-        ary.forEach((it,idx) => console.log(`  ${idx}: ${it.searchtext}`))
-        // console.log('relative: ', ary.reduce((pre,cur) => pre +=cur.searchtext + ', ', ''))
-      } else {
-        console.log(`\n<<< msg: Sorry, there is no answer you want here. *_*`)
-      }
-    })
-    .catch((err) => {
-      console.log('')
-    })
-}
-// get data by getWord
-async function getWord (word) {
-  await axios.get(wordBaseUrl + word)
-      .then(async res => {
-        let data = res.data
-        // 未查询到准确单词
-        if (data.length === 0) {
-          await getAutoWord(word)
-        } else {
-          data.forEach((it, idx) => {
-            console.log( '\n# ', idx + 1)
-            let info = it.senses[0].defs[0]
-            console.log('Cn: ', info.defCn.replace(/\s+/g,' '))
-            console.log('En: ', info.defEn.replace(/\s+/g,' '))
-            console.log('example: ', '\n', '  ' + info.examples[0].cn.replace(/\s+/g,' '),
-              '\n', '  ' + info.examples[0].en.replace(/\s+/g,' '))
-          })
-        }
-      })
-      .catch(err => console.log(''))
-  }
+program
+  .command('exec <cmd>')
+  .alias('ex')
+  .description('execute the given remote cmd')
+  .option("-e, --exec_mode <mode>", "Which exec mode to use")
+  .action(function(cmd, options){
+    console.log('exec "%s" using %s mode', cmd, options.exec_mode)
+  }).on('--help', function() {
+    console.log('  Examples:')
+    console.log()
+    console.log('    $ deploy exec sequential')
+    console.log('    $ deploy exec async')
+    console.log()
+  })
 
 
-
-// rl.prompt()
-
-rl.on('line', async (line) => {
-  if (line.trim() === '') {
-    return rl.prompt()
-  } else if (line.trim() === 'gg') {
-    process.exit(0)
-  }
-
-  // get data
-  await getWord(line.trim())
-  console.log('\n')
-
-  rl.prompt()
-}).on('close', () => {
-  console.log('Bye...')
-  process.exit(0)
-})
-
+var word = require('../lib/word.js')
