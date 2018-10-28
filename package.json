@@ -1,0 +1,27 @@
+{
+  "name": "godict",
+  "version": "1.0.0",
+  "description": "search words by cli",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ices1/GoDict.git"
+  },
+  "keywords": [
+    "dictionar",
+    "english",
+    "chinese"
+  ],
+  "author": "ices1",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ices1/GoDict/issues"
+  },
+  "homepage": "https://github.com/ices1/GoDict#readme",
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
+}
