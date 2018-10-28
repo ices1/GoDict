@@ -10,7 +10,7 @@ Command line tool for translating English words into Chinese.
 ```
 
 ### run
-```js
+```bash
     $ godict -V
     // 1.3.0
 
