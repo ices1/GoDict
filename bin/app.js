@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const axios = require('axios')
 const wordBaseUrl = 'http://104.194.71.73:5001/word/'
 const AutoBaseUrl = 'http://104.194.71.73:5001/autocomplete/'
