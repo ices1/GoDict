@@ -7,12 +7,22 @@ const readline = require('readline')
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
+  // prompt: 'godict '
   prompt: 'GoDict >>> '
 })
 
-rl.prompt()
+// read the second argv...
+;(async () => {
+  if (process.argv[2]) {
+    let a = await getWord(process.argv[2].trim())
+    console.log('\n')
+    rl.prompt()
+  } 
+  })()
 
-const getAutoWord = async (word) => {
+
+// get data by  getAutoWord
+async function  getAutoWord (word) {
   await axios.get(AutoBaseUrl + word)
     .then((res) => {
       let ary = res.data.results
@@ -28,8 +38,8 @@ const getAutoWord = async (word) => {
       console.log('')
     })
 }
-
-const getWord = async (word) => {
+// get data by getWord
+async function getWord (word) {
   await axios.get(wordBaseUrl + word)
       .then(async res => {
         let data = res.data
@@ -50,12 +60,18 @@ const getWord = async (word) => {
       .catch(err => console.log(''))
   }
 
+
+
+// rl.prompt()
+
 rl.on('line', async (line) => {
   if (line.trim() === '') {
     return rl.prompt()
+  } else if (line.trim() === 'gg') {
+    process.exit(0)
   }
 
-  // 请求数据
+  // get data
   await getWord(line.trim())
   console.log('\n')
 
